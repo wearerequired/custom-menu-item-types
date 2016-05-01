@@ -12,7 +12,15 @@
             "role": "Developer"
         }
     ],
-    "require": {},
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/wearerequired/wp-requirements-check"
+        }
+    ],
+    "require": {
+      "required/wp-requirements-check": "dev-master"
+    },
     "require-dev": {
         "phpmd/phpmd": "@stable"
     },

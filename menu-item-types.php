@@ -39,7 +39,7 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require __DIR__ . '/vendor/autoload.php';
 }
 
-$menu_item_types_requirements_check = new Requirements_Check( array(
+$menu_item_types_requirements_check = new \required\WP_Requirements_Check( array(
 	'title' => 'Custom Menu Item Types',
 	'php'   => '5.3',
 	'wp'    => '4.4',
