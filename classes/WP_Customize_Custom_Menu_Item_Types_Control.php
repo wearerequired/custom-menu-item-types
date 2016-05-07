@@ -7,14 +7,14 @@
  * @since 4.4.0
  */
 
-namespace wearerequired\Custom_Menu_Item_Types;
+namespace required\Custom_Menu_Item_Types;
 
 /**
  * Customize control to represent the name field for a given menu.
  *
  * @since 4.3.0
  */
-class WP_Customize_Custom_Menu_Item_Types_Control extends WP_Customize_Nav_Menu_Item_Control {
+class WP_Customize_Custom_Menu_Item_Types_Control extends \WP_Customize_Nav_Menu_Item_Control {
 
 	/**
 	 * Constructor.

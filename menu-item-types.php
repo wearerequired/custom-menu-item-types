@@ -31,15 +31,19 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-namespace wearerequired\Custom_Menu_Item_Types;
+namespace required\Custom_Menu_Item_Types;
 
 defined( 'WPINC' ) or die;
+
+if ( ! defined( 'RCMIT_FILE' ) ) {
+	define( 'RCMIT_FILE', __FILE__ );
+}
 
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require __DIR__ . '/vendor/autoload.php';
 }
 
-$menu_item_types_requirements_check = new \required\WP_Requirements_Check( array(
+$menu_item_types_requirements_check = new \WP_Requirements_Check( array(
 	'title' => 'Custom Menu Item Types',
 	'php'   => '5.3',
 	'wp'    => '4.4',
@@ -48,8 +52,8 @@ $menu_item_types_requirements_check = new \required\WP_Requirements_Check( array
 
 if ( $menu_item_types_requirements_check->passes() ) {
 	// Pull in the plugin classes and initialize.
-	include( dirname( __FILE__ ) . '/lib/wp-stack-plugin.php' );
-	Plugin::start( __FILE__ );
+	$rcmit_plugin = new Plugin();
+	$rcmit_plugin->run();
 }
 
 unset( $menu_item_types_requirements_check );

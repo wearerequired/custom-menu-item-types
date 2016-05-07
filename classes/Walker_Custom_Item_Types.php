@@ -7,7 +7,7 @@
  * @since 4.4.0
  */
 
-namespace wearerequired\Custom_Menu_Item_Types;
+namespace required\Custom_Menu_Item_Types;
 
 /**
  * Create HTML list of nav menu input items.
@@ -16,7 +16,7 @@ namespace wearerequired\Custom_Menu_Item_Types;
  * @since 3.0.0
  * @uses Walker_Nav_Menu
  */
-class Walker_Custom_Item_Types extends Walker_Nav_Menu_Edit {
+class Walker_Custom_Item_Types extends \Walker_Nav_Menu_Edit {
 
 	/**
 	 * Start the element output.
@@ -47,7 +47,7 @@ class Walker_Custom_Item_Types extends Walker_Nav_Menu_Edit {
 			'_wpnonce',
 		);
 
-		$original_title = '';
+		$original_title = false;
 		if ( 'taxonomy' == $item->type ) {
 			$original_title = get_term_field( 'name', $item->object_id, $item->object, 'raw' );
 			if ( is_wp_error( $original_title ) )
@@ -127,7 +127,7 @@ class Walker_Custom_Item_Types extends Walker_Nav_Menu_Edit {
 				</div>
 			</div>
 
-			<div class="menu-item-settings" id="menu-item-settings-<?php echo $item_id; ?>">
+			<div class="menu-item-settings wp-clearfix" id="menu-item-settings-<?php echo $item_id; ?>">
 				<?php $nav_menu_item_fields = array(); ?>
 				<?php if ( 'custom' === $item->type ) : ?>
 					<?php ob_start(); ?>
@@ -140,7 +140,7 @@ class Walker_Custom_Item_Types extends Walker_Nav_Menu_Edit {
 					<?php $nav_menu_item_fields['custom'] = ob_get_clean(); ?>
 				<?php endif; ?>
 				<?php ob_start(); ?>
-				<p class="description description-wide">
+				<p class="field-title description description-wide">
 					<label for="edit-menu-item-title-<?php echo $item_id; ?>">
 						<?php _e( 'Navigation Label' ); ?><br />
 						<input type="text" id="edit-menu-item-title-<?php echo $item_id; ?>" class="widefat edit-menu-item-title" name="menu-item-title[<?php echo $item_id; ?>]" value="<?php echo esc_attr( $item->title ); ?>" />
@@ -148,7 +148,7 @@ class Walker_Custom_Item_Types extends Walker_Nav_Menu_Edit {
 				</p>
 				<?php $nav_menu_item_fields['title'] = ob_get_clean(); ?>
 				<?php ob_start(); ?>
-				<p class="field-title-attribute description description-wide">
+				<p class="field-title-attribute field-attr-title description description-wide">
 					<label for="edit-menu-item-attr-title-<?php echo $item_id; ?>">
 						<?php _e( 'Title Attribute' ); ?><br />
 						<input type="text" id="edit-menu-item-attr-title-<?php echo $item_id; ?>" class="widefat edit-menu-item-attr-title" name="menu-item-attr-title[<?php echo $item_id; ?>]" value="<?php echo esc_attr( $item->post_excerpt ); ?>" />
