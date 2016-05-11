@@ -31,11 +31,10 @@ class Plugin {
 	protected function register_backend() {
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'wp_setup_nav_menu_item', array( $this, 'wp_setup_nav_menu_item' ) );
 		add_filter( 'wp_edit_nav_menu_walker', array( $this, 'wp_edit_nav_menu_walker' ), 10, 2 );
 		add_filter( 'wp_nav_menu_item_fields', array( $this, 'wp_nav_menu_item_fields' ), 10, 2 );
-		add_action( 'wp_update_nav_menu_item', array( $this, 'wp_update_nav_menu_item'), 10, 2 );
+		add_action( 'wp_update_nav_menu_item', array( $this, 'wp_update_nav_menu_item'), 10, 3 );
 		//add_filter( 'customize_nav_menu_available_item_types', array( $this, 'customize_nav_menu_available_item_types' ), 10, 4);
 	}
 
@@ -84,32 +83,6 @@ class Plugin {
 		);
 	}
 
-	public function admin_enqueue_scripts( $hook ) {
-		if ( $hook !== 'nav-menus.php' ){
-			return;
-		}
-		wp_enqueue_style(
-			'rmit-admin-style',
-			$this->get_url() . 'css/menu-item-types.css',
-			false,
-			'1.0.0'
-		);
-		wp_enqueue_script(
-			'rmit-menu-script',
-			$this->get_url() . 'js/src/menu-item-types.js',
-			false,
-			'1.0.0'
-		);
-		$translation_array = array(
-			'line_break_title' => __( 'Line Break', 'menu-item-types' ),
-		);
-		wp_localize_script(
-			'rmit-menu-script',
-			'rcmit_data',
-			$translation_array
-		);
-	}
-
 	/**
 	 * Change item label depending on the link
 	 */
@@ -121,6 +94,9 @@ class Plugin {
 			case '#line_break':
 				$menu_item->type_label = __( 'Line Break', 'menu-item-types' );
 				break;
+			case '#column_end':
+				$menu_item->type_label = __( 'Column End', 'menu-item-types' );
+				break;
 			case '#custom_headline':
 				$menu_item->type_label = __( 'Headline', 'menu-item-types' );
 				break;
@@ -129,7 +105,9 @@ class Plugin {
 				break;
 		}
 		$menu_item->rcmit_type = ! isset( $menu_item->rcmit_type ) ? get_post_meta( $menu_item->ID, '_menu_item_rcmit_type', true ) : $menu_item->rcmit_type;
-		$menu_item->rcmit_header = ! isset( $menu_item->rcmit_header ) ? get_post_meta( $menu_item->ID, '_menu_item_rcmit_header', true ) : $menu_item->rcmit_header;
+		$menu_item->rcmit_button_text = ! isset( $menu_item->rcmit_button_text ) ? get_post_meta( $menu_item->ID, '_menu_item_rcmit_button_text', true ) : $menu_item->rcmit_button_text;
+		$menu_item->rcmit_shortcode = ! isset( $menu_item->rcmit_shortcode ) ? get_post_meta( $menu_item->ID, '_menu_item_rcmit_shortcode', true ) : $menu_item->rcmit_shortcode;
+		$menu_item->rcmit_column = ! isset( $menu_item->rcmit_column ) ? get_post_meta( $menu_item->ID, '_menu_item_rcmit_column', true ) : $menu_item->rcmit_column;
 		switch ( $menu_item->rcmit_type ) {
 			case 'highlight_box':
 				$menu_item->type_label = __( 'Highlight Box', 'menu-item-types' );
@@ -145,22 +123,41 @@ class Plugin {
 		if ( 'custom' !== $item->type ) {
 			return $item_output;
 		}
+		/** This filter is documented in wp-includes/post-template.php */
+		$title = apply_filters( 'the_title', $item->title, $item->ID );
+		/** This filter is documented in wp-includes\nav-menu-template.php */
+		$title = apply_filters( 'nav_menu_item_title', $title, $item, $args, $depth );
+		$item->rcmit_type = ! isset( $item->rcmit_type ) ? get_post_meta( $item->ID, '_menu_item_rcmit_type', true ) : $item->rcmit_type;
+		$item->rcmit_button_text = ! isset( $item->rcmit_button_text ) ? get_post_meta( $item->ID, '_menu_item_rcmit_button_text', true ) : $item->rcmit_button_text;
+		$item->rcmit_shortcode = ! isset( $item->rcmit_shortcode ) ? get_post_meta( $item->ID, '_menu_item_rcmit_shortcode', true ) : $item->rcmit_shortcode;
+		$item->rcmit_column = ! isset( $item->rcmit_column ) ? get_post_meta( $item->ID, '_menu_item_rcmit_column', true ) : $item->rcmit_column;
 		switch ( $item->url ) {
 			case '#line_break':
 				$item_output = '<hr>';
 				break;
+			case '#column_end':
+				$item_output = '</ul></div><div class="col ' . $item->rcmit_column . '"><ul>';
+				break;
 			case '#custom_headline':
-				$item_output = '<h3>' . $item->post_title . '</h3>';
+				$item_output = '<h4>' . $item->post_title . '</h4>';
 				break;
 		}
+
 		switch ( $item->rcmit_type ) {
 			case 'highlight_box':
-				$item_output = $item_output;
+				$item_output = $args->before;
+				$item_output .= '<h4>' . $title . '</h4>';
+				$item_output .= '<p>' . esc_html( $item->description ) . '</p>';
+				$item_output .= '<a class="button" href="' . esc_url( $item->url ) . '">';
+				$item_output .= $args->link_before . esc_html( $item->rcmit_button_text ) . $args->link_after;
+				$item_output .= '</a>';
+				$item_output .= $args->after;
 				break;
 			case 'newsletter_box':
-				$item_output = $item_output;
+				$item_output = '<div><h4>' . esc_html( $title ) . '<h4><p>' . esc_html( $item->description ) . '</p>' . do_shortcode( $item->rcmit_shortcode ) . '</div>';
 				break;
 		}
+
 		return $item_output;
 	}
 
@@ -172,21 +169,61 @@ class Plugin {
 		if ( 'custom' !== $context['item']->type ) {
 			return $nav_menu_item_fields;
 		}
-		if ( isset( $context['item']->rcmit_type ) ) { ?>
+		switch ( $context['item']->url ) {
+			case '#column_end':
+				ob_start(); ?>
+					<p class="field-column description description-wide">
+						<label for="edit-menu-item-column-<?php echo $context['item']->ID; ?>">
+							<?php _e( 'Width of next column', 'menu-item-types' ); ?><br />
+							<select name="menu-item-column[<?php echo $context['item']->ID; ?>]">
+								<option value="col-3" <?php selected( $context['item']->rcmit_column, 'col-3' ) ?>>Col 3</option>
+								<option value="col-4" <?php selected( $context['item']->rcmit_column, 'col-4' ) ?>>Col 4</option>
+								<option value="col-6" <?php selected( $context['item']->rcmit_column, 'col-6' ) ?>>Col 6</option>
+							</select>
+						</label>
+					</p>
+				<?php $nav_menu_item_fields['column_width'] = ob_get_clean();
+			case '#line_break':
+				unset( $nav_menu_item_fields['css-classes'] );
+				ob_start(); ?>
+					<input type="hidden" id="edit-menu-item-title-<?php echo $context['item']->ID; ?>" class="widefat edit-menu-item-title" name="menu-item-title[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->title ); ?>" />
+				<?php $nav_menu_item_fields['title'] = ob_get_clean();
+			case '#custom_headline':
+				unset( $nav_menu_item_fields['attr-title'] );
+				unset( $nav_menu_item_fields['link-target'] );
+				unset( $nav_menu_item_fields['xfn'] );
+				unset( $nav_menu_item_fields['description'] );
+				ob_start(); ?>
+					<input type="hidden" id="edit-menu-item-url-<?php echo $context['item']->ID; ?>" class="widefat code edit-menu-item-url" name="menu-item-url[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->url ); ?>" />
+				<?php $nav_menu_item_fields['custom'] = ob_get_clean();
+				break;
+		}
+		if ( ! empty( $context['item']->rcmit_type ) ) { ?>
 			<input class="menu-item-data-rcmit-type" type="hidden" name="menu-item-rcmit-type[<?php echo $context['item']->ID; ?>]" value="<?php echo $context['item']->rcmit_type; ?>" />
 			<?php
+			unset( $nav_menu_item_fields['title'] );
+			unset( $nav_menu_item_fields['custom'] );
+			unset( $nav_menu_item_fields['attr-title'] );
+			unset( $nav_menu_item_fields['link-target'] );
+			unset( $nav_menu_item_fields['xfn'] );
 			$new_nav_menu_item_fields = array();
 			if ( 'highlight_box' === $context['item']->rcmit_type ) {
-				unset( $nav_menu_item_fields['title'] );
-				unset( $nav_menu_item_fields['custom'] );
 				ob_start(); ?>
 				<p class="field-title description description-wide">
 					<label for="edit-menu-item-title-<?php echo $context['item']->ID; ?>">
-						<?php _e( 'Button Text' ); ?><br />
+						<?php _e( 'Box Header', 'menu-item-types' ); ?><br />
 						<input type="text" id="edit-menu-item-title-<?php echo $context['item']->ID; ?>" class="widefat edit-menu-item-title" name="menu-item-title[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->title ); ?>" />
 					</label>
 				</p>
 				<?php $new_nav_menu_item_fields['title'] = ob_get_clean(); ?>
+				<?php ob_start(); ?>
+				<p class="field-button-text description description-wide">
+					<label for="edit-menu-item-button-text-<?php echo $context['item']->ID; ?>">
+						<?php _e( 'Button Text' ); ?><br />
+						<input type="text" id="edit-menu-item-button-text-<?php echo $context['item']->ID; ?>" class="widefat code edit-menu-item-button-text" name="menu-item-button-text[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->rcmit_button_text ); ?>" />
+					</label>
+				</p>
+				<?php $new_nav_menu_item_fields['button_text'] = ob_get_clean(); ?>
 				<?php ob_start(); ?>
 				<p class="field-url description description-wide">
 					<label for="edit-menu-item-url-<?php echo $context['item']->ID; ?>">
@@ -195,18 +232,10 @@ class Plugin {
 					</label>
 				</p>
 				<?php $new_nav_menu_item_fields['highlight_box'] = ob_get_clean(); ?>
-				<?php ob_start(); ?>
-				<p class="field-header description description-wide">
-					<label for="edit-menu-item-header-<?php echo $context['item']->ID; ?>">
-						<?php _e( 'Box Header', 'menu-item-types' ); ?><br />
-						<input type="text" id="edit-menu-item-header-<?php echo $context['item']->ID; ?>" class="widefat code edit-menu-item-header" name="menu-item-header[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->rcmit_header ); ?>" />
-					</label>
-				</p>
-				<?php $new_nav_menu_item_fields['highlight_box_header'] = ob_get_clean();
+				<?php $new_nav_menu_item_fields['description'] = $nav_menu_item_fields['description'];
 			}
 			if ( 'newsletter_box' === $context['item']->rcmit_type ) {
-				unset( $nav_menu_item_fields['title'] );
-				unset( $nav_menu_item_fields['custom'] );
+
 				ob_start(); ?>
 				<p class="field-title description description-wide">
 					<label for="edit-menu-item-title-<?php echo $context['item']->ID; ?>">
@@ -215,9 +244,10 @@ class Plugin {
 					</label>
 				</p>
 				<?php $new_nav_menu_item_fields['title'] = ob_get_clean(); ?>
+				<?php $new_nav_menu_item_fields['description'] = $nav_menu_item_fields['description']; ?>
 				<?php ob_start(); ?>
 				<p class="field-shortcode description description-wide">
-					<label for="edit-menu-item-header-<?php echo $context['item']->ID; ?>">
+					<label for="edit-menu-item-shortcode-<?php echo $context['item']->ID; ?>">
 						<?php _e( 'Shortcode', 'menu-item-types' ); ?><br />
 						<input type="text" id="edit-menu-item-shortcode-<?php echo $context['item']->ID; ?>" class="widefat code edit-menu-item-shortcode" name="menu-item-shortcode[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->rcmit_shortcode ); ?>" />
 					</label>
@@ -251,6 +281,14 @@ class Plugin {
 				<ul id ="custom-item-types-checklist" class="categorychecklist form-no-clear">
 					<li>
 						<label class="menu-item-title">
+							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Column End', 'menu-item-types' ); ?>
+						</label>
+						<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
+						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Column End', 'menu-item-types' ); ?>">
+						<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="#column_end">
+					</li>
+					<li>
+						<label class="menu-item-title">
 							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Line Break', 'menu-item-types' ); ?>
 						</label>
 						<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
@@ -270,7 +308,7 @@ class Plugin {
 							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Highlight Box', 'menu-item-types' ); ?>
 						</label>
 						<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
-						<input type="hidden" class="menu-item-rcmit-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-rcmit-type]" value="highlight_box">
+						<input type="hidden" class="menu-item-rcmit-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="highlight_box">
 						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Highlight Box', 'menu-item-types' ); ?>">
 					</li>
 					<li>
@@ -278,7 +316,7 @@ class Plugin {
 							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Newsletter Box', 'menu-item-types' ); ?>
 						</label>
 						<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
-						<input type="hidden" class="menu-item-rcmit-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-rcmit-type]" value="newsletter_box">
+						<input type="hidden" class="menu-item-rcmit-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="newsletter_box">
 						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Newsletter Box', 'menu-item-types' ); ?>">
 					</li>
 				</ul>
@@ -296,30 +334,50 @@ class Plugin {
 		<?php
 	}
 
-	public function wp_update_nav_menu_item( $menu_id = 0, $menu_item_db_id = 0 ) {
-		if ( empty( $_POST['menu-item-rcmit-type'][ $menu_item_db_id ] ) && empty( $_POST['menu-item-header'][ $menu_item_db_id ] ) && empty( $_POST['menu-item-shortcode'][ $menu_item_db_id ] ) ) {
+	public function wp_update_nav_menu_item( $menu_id = 0, $menu_item_db_id = 0, $args ) {
+		if ( ! current_user_can( 'edit_theme_options' ) ) {
 			return;
 		}
-		// security check
-		// as 'wp_update_nav_menu_item' can be called from outside WP admin
-		// && wp_verify_nonce( 'update-nav_menu', 'update-nav-menu-nonce' )
-		if ( current_user_can( 'edit_theme_options' ) ) {
-			update_post_meta(
-				$menu_item_db_id,
-				'_menu_item_rcmit_type',
-				sanitize_text_field( $_POST['menu-item-rcmit-type'][ $menu_item_db_id ] )
-			);
-			update_post_meta(
-				$menu_item_db_id,
-				'_menu_item_rcmit_header',
-				sanitize_text_field( $_POST['menu-item-header'][ $menu_item_db_id ] )
-			);
-			update_post_meta(
-				$menu_item_db_id,
-				'_menu_item_rcmit_shortcode',
-				sanitize_text_field( $_POST['menu-item-shortcode'][ $menu_item_db_id ] )
-			);
+		// Add new menu item via ajax.
+		if ( isset( $_REQUEST['menu-settings-column-nonce'] ) && wp_verify_nonce( $_REQUEST['menu-settings-column-nonce'], 'add-menu_item' ) ) {
+			if ( ! empty( $_POST['menu-item'][ '-1' ]['menu-item-url'] ) && in_array( $_POST['menu-item'][ '-1' ]['menu-item-url'], array( 'newsletter_box', 'highlight_box' ) ) ) {
+				update_post_meta(
+					$menu_item_db_id,
+					'_menu_item_rcmit_type',
+					sanitize_text_field( $_POST['menu-item'][ '-1' ]['menu-item-url'] )
+				);
+				update_post_meta(
+					$menu_item_db_id,
+					'_menu_item_url',
+					''
+				);
+			}
 		}
+		// Updaate settings for existsing menu items.
+		if ( isset( $_REQUEST['update-nav-menu-nonce'] ) && wp_verify_nonce( $_REQUEST['update-nav-menu-nonce'], 'update-nav_menu' ) ) {
+			if ( ! empty( $_POST['menu-item-button-text'][ $menu_item_db_id ] ) ) {
+				update_post_meta(
+					$menu_item_db_id,
+					'_menu_item_rcmit_button_text',
+					sanitize_text_field( $_POST['menu-item-button-text'][ $menu_item_db_id ] )
+				);
+			}
+			if ( ! empty( $_POST['menu-item-shortcode'][ $menu_item_db_id ] ) ) {
+				update_post_meta(
+					$menu_item_db_id,
+					'_menu_item_rcmit_shortcode',
+					sanitize_text_field( $_POST['menu-item-shortcode'][ $menu_item_db_id ] )
+				);
+			}
+			if ( ! empty( $_POST['menu-item-column'][ $menu_item_db_id ] ) ) {
+				update_post_meta(
+					$menu_item_db_id,
+					'_menu_item_rcmit_column',
+					sanitize_text_field( $_POST['menu-item-column'][ $menu_item_db_id ] )
+				);
+			}
+		}
+
 	}
 
 }

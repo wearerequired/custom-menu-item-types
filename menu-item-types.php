@@ -56,4 +56,5 @@ if ( $menu_item_types_requirements_check->passes() ) {
 	$rcmit_plugin->run();
 }
 
+// Unset, since it's loaded in global scope
 unset( $menu_item_types_requirements_check );
