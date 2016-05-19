@@ -27,8 +27,8 @@ class Plugin {
 	}
 
 	protected function register_backend() {
+		add_action( 'init', array( $this, 'load_textdomain' ) );
 		$custom_menu_items = new Custom_Menu_Items;
-		add_action( 'init', array( $custom_menu_items, 'load_textdomain' ) );
 		add_action( 'admin_init', array( $custom_menu_items, 'add_meta_box' ) );
 		add_filter( 'wp_setup_nav_menu_item', array( $custom_menu_items, 'customize_menu_item_label' ) );
 		add_filter( 'wp_edit_nav_menu_walker', array( $custom_menu_items, 'wp_edit_nav_menu_walker' ), 10, 2 );
