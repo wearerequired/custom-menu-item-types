@@ -99,7 +99,7 @@ class Custom_Menu_Items {
 				$item_output .= $args->after;
 				break;
 			case 'newsletter_box':
-				$item_output = '<div><h4>' . esc_html( $title ) . '<h4><p>' . esc_html( $item->description ) . '</p>' . do_shortcode( $item->rcmit_shortcode ) . '</div>';
+				$item_output = $args->before . '<div><h4>' . esc_html( $title ) . '</h4><p>' . esc_html( $item->description ) . '</p>' . do_shortcode( $item->rcmit_shortcode ) . '</div>' . $args->after;
 				break;
 		}
 
