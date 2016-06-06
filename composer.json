@@ -1,7 +1,6 @@
 {
     "name": "wearerequired/custom-menu-item-types",
     "description": "Additional menu item types that can be easily added to the menu like line breaks and titles.",
-    "version": "0.1.0",
     "type": "wordpress-plugin",
     "license": "GPL-2.0+",
     "authors": [
