@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-      "required/wp-requirements-check": "dev-master"
+      "wearerequired/wp-requirements-check": "dev-master"
     },
     "require-dev": {
         "phpmd/phpmd": "@stable"
