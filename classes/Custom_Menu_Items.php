@@ -75,13 +75,9 @@ class Custom_Menu_Items {
 		$item->rcmit_type = ! isset( $item->rcmit_type ) ? get_post_meta( $item->ID, '_menu_item_rcmit_type', true ) : $item->rcmit_type;
 		$item->rcmit_button_text = ! isset( $item->rcmit_button_text ) ? get_post_meta( $item->ID, '_menu_item_rcmit_button_text', true ) : $item->rcmit_button_text;
 		$item->rcmit_shortcode = ! isset( $item->rcmit_shortcode ) ? get_post_meta( $item->ID, '_menu_item_rcmit_shortcode', true ) : $item->rcmit_shortcode;
-		$item->rcmit_column = ! isset( $item->rcmit_column ) ? get_post_meta( $item->ID, '_menu_item_rcmit_column', true ) : $item->rcmit_column;
 		switch ( $item->url ) {
 			case '#line_break':
 				$item_output = '<hr>';
-				break;
-			case '#column_end':
-				$item_output = '</ul></div><div class="col ' . $item->rcmit_column . '"><ul>';
 				break;
 			case '#custom_headline':
 				$item_output = '<h4>' . $item->post_title . '</h4>';
