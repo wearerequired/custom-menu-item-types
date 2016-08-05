@@ -79,6 +79,9 @@ class Custom_Menu_Items {
 			case '#line_break':
 				$item_output = '<hr>';
 				break;
+			case '#column_end':
+				$item_output = '';
+				break;
 			case '#custom_headline':
 				$item_output = '<h4>' . $item->post_title . '</h4>';
 				break;
