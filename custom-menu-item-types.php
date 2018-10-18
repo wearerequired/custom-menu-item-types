@@ -42,8 +42,8 @@ if ( ! class_exists( 'WP_Requirements_Check' ) ) {
 
 $requirements_check = new WP_Requirements_Check( array(
 	'title' => 'Custom Menu Item Types',
-	'php'   => '5.3',
-	'wp'    => '4.4',
+	'php'   => '7.0',
+	'wp'    => '4.9',
 	'file'  => __FILE__,
 ) );
 

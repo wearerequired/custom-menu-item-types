@@ -17,6 +17,7 @@
         }
     ],
     "require": {
+        "php": ">= 7.0",
         "wearerequired/wp-requirements-check": "^1.0"
     },
     "autoload": {
