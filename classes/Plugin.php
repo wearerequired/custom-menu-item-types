@@ -24,10 +24,10 @@ class Plugin {
 	}
 
 	protected function register_common() {
+		add_action( 'init', [ $this, 'register_traduttore_project' ] );
 	}
 
 	protected function register_backend() {
-		add_action( 'init', array( $this, 'load_textdomain' ) );
 		$custom_menu_items = new Custom_Menu_Items;
 		add_action( 'admin_init', array( $custom_menu_items, 'add_meta_box' ) );
 		add_filter( 'wp_setup_nav_menu_item', array( $custom_menu_items, 'customize_menu_item_label' ) );
@@ -61,12 +61,21 @@ class Plugin {
 	}
 
 	/**
-	 * Load the plugin textdomain.
+	 * Registers Traduttore project for language packs.
 	 *
-	 * @return bool Returns true if the textdomain was loaded successfully, false otherwise.
+	 * @link https://translate.required.com/projects/required/custom-menu-item-types/
+	 *
+	 * @since 2.0.0
 	 */
-	public function load_textdomain() {
-		return load_plugin_textdomain( 'menu-item-types', false, basename( dirname( RCMIT_FILE ) ) . 'languages' );
-	}
+	public function register_traduttore_project() {
+		if ( ! function_exists( 'Required\Traduttore_Registry\add_project' ) ) {
+			return;
+		}
 
+		\Required\Traduttore_Registry\add_project(
+			'plugin',
+			'custom-menu-item-types',
+			'https://translate.required.com/api/translations/required/custom-menu-item-types/'
+		);
+	}
 }

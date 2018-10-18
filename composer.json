@@ -26,6 +26,9 @@
             ]
         }
     },
+    "suggest":{
+        "wearerequired/traduttore-registry": "Allows loading translation files from a custom GlotPress site running Traduttore"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "2.0.x-dev"
