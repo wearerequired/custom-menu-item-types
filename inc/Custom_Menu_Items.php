@@ -7,6 +7,8 @@
 
 namespace Required\CustomMenuItemTypes;
 
+use Required\CustomMenuItemTypes\Walker\NavMenuEditWithCustomItemTypes;
+
 /**
  * Menu_Item_Types class.
  */
@@ -101,7 +103,7 @@ class Custom_Menu_Items {
 	}
 
 	public function wp_edit_nav_menu_walker() {
-		return Walker_Custom_Item_Types::class;
+		return NavMenuEditWithCustomItemTypes::class;
 	}
 
 	public function wp_nav_menu_item_fields( $nav_menu_item_fields, $context ) {
