@@ -1,25 +1,29 @@
 {
     "name": "wearerequired/custom-menu-item-types",
-    "description": "Additional menu item types that can be easily added to the menu like line breaks and titles.",
+    "description": "WordPress plugin for additional menu item types that can be easily added to the menu like line breaks and titles.",
     "type": "wordpress-plugin",
-    "license": "GPL-2.0+",
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "required",
-            "email": "support@required.ch",
-            "homepage": "http://required.ch",
+            "email": "info@required.ch",
+            "homepage": "https://required.com",
+            "role": "Company"
+        },
+        {
+            "name": "Ulrich Pogson",
+            "email": "ulrich@required.ch",
             "role": "Developer"
         }
     ],
     "require": {
         "wearerequired/wp-requirements-check": "^1.0"
     },
-    "require-dev": {
-        "phpmd/phpmd": "@stable"
-    },
     "autoload": {
         "psr-4": {
-            "required\\Custom_Menu_Item_Types\\": ["classes/"]
+            "required\\Custom_Menu_Item_Types\\": [
+                "classes/"
+            ]
         }
     },
     "extra": {
