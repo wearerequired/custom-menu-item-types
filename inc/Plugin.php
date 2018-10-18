@@ -43,24 +43,6 @@ class Plugin {
 	}
 
 	/**
-	 * Returns the URL to the plugin directory
-	 *
-	 * @return string The URL to the plugin directory.
-	 */
-	public function get_url() {
-		return plugin_dir_url( RCMIT_FILE );
-	}
-
-	/**
-	 * Returns the path to the plugin directory.
-	 *
-	 * @return string The absolute path to the plugin directory.
-	 */
-	public function get_path() {
-		return plugin_dir_path( RCMIT_FILE );
-	}
-
-	/**
 	 * Registers Traduttore project for language packs.
 	 *
 	 * @link https://translate.required.com/projects/required/custom-menu-item-types/

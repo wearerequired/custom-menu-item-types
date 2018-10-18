@@ -31,30 +31,25 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-namespace required\Custom_Menu_Item_Types;
-
-defined( 'WPINC' ) or die;
-
-if ( ! defined( 'RCMIT_FILE' ) ) {
-	define( 'RCMIT_FILE', __FILE__ );
+if ( file_exists( dirname( __FILE__ ) . '/vendor/autoload.php' ) ) {
+	require dirname( __FILE__ ) . '/vendor/autoload.php';
 }
 
-if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
-	require __DIR__ . '/vendor/autoload.php';
+if ( ! class_exists( 'WP_Requirements_Check' ) ) {
+	trigger_error( sprintf( '%s does not exist. Check Composer\'s autoloader.', 'WP_Requirements_Check' ), E_USER_WARNING );
+	return;
 }
 
-$menu_item_types_requirements_check = new \WP_Requirements_Check( array(
+$requirements_check = new WP_Requirements_Check( array(
 	'title' => 'Custom Menu Item Types',
 	'php'   => '5.3',
 	'wp'    => '4.4',
 	'file'  => __FILE__,
 ) );
 
-if ( $menu_item_types_requirements_check->passes() ) {
-	// Pull in the plugin classes and initialize.
-	$rcmit_plugin = new Plugin();
-	$rcmit_plugin->run();
+
+if ( $requirements_check->passes() ) {
+	require_once dirname( __FILE__ ) . '/inc/namespace.php';
 }
 
-// Unset, since it's loaded in global scope
-unset( $menu_item_types_requirements_check );
+unset( $requirements_check );
