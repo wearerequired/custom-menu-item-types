@@ -9,7 +9,7 @@ namespace Required\CustomMenuItemTypes\Walker;
 use Walker_Nav_Menu_Edit;
 
 /**
- * Create HTML list of nav menu input items.
+ * Extends Walker_Nav_Menu_Edit to provide a filter for settings fields.
  *
  * @uses \Walker_Nav_Menu_Edit
  */
