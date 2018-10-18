@@ -1,11 +1,11 @@
 # Custom Menu Item Types #
-Contributors:      wearerequired, grapplerulrich
-Donate link:       http://required.ch
-Requires at least: 4.0
-Tested up to:      4.2
-Stable tag:        0.1.0
-License:           GPLv2 or later
-License URI:       http://www.gnu.org/licenses/gpl-2.0.html
+Contributors:      wearerequired, grapplerulrich  
+Donate link:       https://required.ch  
+Requires at least: 4.0  
+Tested up to:      4.2  
+Stable tag:        0.1.0  
+License:           GPLv2 or later  
+License URI:       http://www.gnu.org/licenses/gpl-2.0.html  
 
 Additional menu item types that can be easily added to the menu like line breaks and titles.
 
