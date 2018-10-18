@@ -11,21 +11,18 @@ use Walker_Nav_Menu_Edit;
 /**
  * Create HTML list of nav menu input items.
  *
- * @package WordPress
- * @since 3.0.0
- * @uses Walker_Nav_Menu
+ * @uses \Walker_Nav_Menu_Edit
  */
 class NavMenuEditWithCustomItemTypes extends Walker_Nav_Menu_Edit {
 
 	/**
-	 * Start the element output.
+	 * Starts the element output.
 	 *
-	 * @see Walker_Nav_Menu::start_el()
-	 * @since 3.0.0
+	 * @see \Walker_Nav_Menu_Edit::start_el()
 	 *
 	 * @global int $_wp_nav_menu_max_depth
 	 *
-	 * @param string $output Passed by reference. Used to append additional content.
+	 * @param string $output Used to append additional content (passed by reference).
 	 * @param object $item   Menu item data object.
 	 * @param int    $depth  Depth of menu item. Used for padding.
 	 * @param array  $args   Not used.
@@ -36,7 +33,7 @@ class NavMenuEditWithCustomItemTypes extends Walker_Nav_Menu_Edit {
 		$_wp_nav_menu_max_depth = $depth > $_wp_nav_menu_max_depth ? $depth : $_wp_nav_menu_max_depth;
 
 		ob_start();
-		$item_id = esc_attr( $item->ID );
+		$item_id      = esc_attr( $item->ID );
 		$removed_args = array(
 			'action',
 			'customlink-tab',
@@ -49,11 +46,12 @@ class NavMenuEditWithCustomItemTypes extends Walker_Nav_Menu_Edit {
 		$original_title = false;
 		if ( 'taxonomy' == $item->type ) {
 			$original_title = get_term_field( 'name', $item->object_id, $item->object, 'raw' );
-			if ( is_wp_error( $original_title ) )
+			if ( is_wp_error( $original_title ) ) {
 				$original_title = false;
+			}
 		} elseif ( 'post_type' == $item->type ) {
 			$original_object = get_post( $item->object_id );
-			$original_title = get_the_title( $original_object->ID );
+			$original_title  = get_the_title( $original_object->ID );
 		} elseif ( 'post_type_archive' == $item->type ) {
 			$original_object = get_post_type_object( $item->object );
 			if ( $original_object ) {
@@ -64,7 +62,7 @@ class NavMenuEditWithCustomItemTypes extends Walker_Nav_Menu_Edit {
 		$classes = array(
 			'menu-item menu-item-depth-' . $depth,
 			'menu-item-' . esc_attr( $item->object ),
-			'menu-item-edit-' . ( ( isset( $_GET['edit-menu-item'] ) && $item_id == $_GET['edit-menu-item'] ) ? 'active' : 'inactive'),
+			'menu-item-edit-' . ( ( isset( $_GET['edit-menu-item'] ) && $item_id == $_GET['edit-menu-item'] ) ? 'active' : 'inactive' ),
 		);
 
 		$title = $item->title;
@@ -76,59 +74,61 @@ class NavMenuEditWithCustomItemTypes extends Walker_Nav_Menu_Edit {
 		} elseif ( isset( $item->post_status ) && 'draft' == $item->post_status ) {
 			$classes[] = 'pending';
 			/* translators: %s: title of menu item in draft status */
-			$title = sprintf( __('%s (Pending)'), $item->title );
+			$title = sprintf( __( '%s (Pending)' ), $item->title );
 		}
 
 		$title = ( ! isset( $item->label ) || '' == $item->label ) ? $title : $item->label;
 
 		$submenu_text = '';
-		if ( 0 == $depth )
+		if ( 0 == $depth ) {
 			$submenu_text = 'style="display: none;"';
+		}
 
 		?>
-		<li id="menu-item-<?php echo $item_id; ?>" class="<?php echo implode(' ', $classes ); ?>">
+		<li id="menu-item-<?php echo $item_id; ?>" class="<?php echo implode( ' ', $classes ); ?>">
 			<div class="menu-item-bar">
 				<div class="menu-item-handle">
 					<span class="item-title"><span class="menu-item-title"><?php echo esc_html( $title ); ?></span> <span class="is-submenu" <?php echo $submenu_text; ?>><?php _e( 'sub item' ); ?></span></span>
 					<span class="item-controls">
-						<span class="item-type"><?php echo esc_html( $item->type_label ); ?></span>
-						<span class="item-order hide-if-js">
-							<a href="<?php
+							<span class="item-type"><?php echo esc_html( $item->type_label ); ?></span>
+							<span class="item-order hide-if-js">
+								<a href="<?php
 								echo wp_nonce_url(
 									add_query_arg(
 										array(
-											'action' => 'move-up-menu-item',
+											'action'    => 'move-up-menu-item',
 											'menu-item' => $item_id,
 										),
-										remove_query_arg($removed_args, admin_url( 'nav-menus.php' ) )
+										remove_query_arg( $removed_args, admin_url( 'nav-menus.php' ) )
 									),
 									'move-menu_item'
 								);
-							?>" class="item-move-up" aria-label="<?php esc_attr_e( 'Move up' ) ?>">&#8593;</a>
-							|
-							<a href="<?php
+								?>" class="item-move-up" aria-label="<?php esc_attr_e( 'Move up' ); ?>">&#8593;</a>
+								|
+								<a href="<?php
 								echo wp_nonce_url(
 									add_query_arg(
 										array(
-											'action' => 'move-down-menu-item',
+											'action'    => 'move-down-menu-item',
 											'menu-item' => $item_id,
 										),
-										remove_query_arg($removed_args, admin_url( 'nav-menus.php' ) )
+										remove_query_arg( $removed_args, admin_url( 'nav-menus.php' ) )
 									),
 									'move-menu_item'
 								);
-							?>" class="item-move-down" aria-label="<?php esc_attr_e( 'Move down' ) ?>">&#8595;</a>
-						</span>
-						<a class="item-edit" id="edit-<?php echo $item_id; ?>" href="<?php
+								?>" class="item-move-down" aria-label="<?php esc_attr_e( 'Move down' ); ?>">&#8595;</a>
+							</span>
+							<a class="item-edit" id="edit-<?php echo $item_id; ?>" href="<?php
 							echo ( isset( $_GET['edit-menu-item'] ) && $item_id == $_GET['edit-menu-item'] ) ? admin_url( 'nav-menus.php' ) : add_query_arg( 'edit-menu-item', $item_id, remove_query_arg( $removed_args, admin_url( 'nav-menus.php#menu-item-settings-' . $item_id ) ) );
-						?>" aria-label="<?php esc_attr_e( 'Edit menu item' ); ?>"><?php _e( 'Edit' ); ?></a>
-					</span>
+							?>" aria-label="<?php esc_attr_e( 'Edit menu item' ); ?>"><span class="screen-reader-text"><?php _e( 'Edit' ); ?></span></a>
+						</span>
 				</div>
 			</div>
 
+			<?php $nav_menu_item_fields = array(); ?>
+
 			<div class="menu-item-settings wp-clearfix" id="menu-item-settings-<?php echo $item_id; ?>">
-				<?php $nav_menu_item_fields = array(); ?>
-				<?php if ( 'custom' === $item->type ) : ?>
+				<?php if ( 'custom' == $item->type ) : ?>
 					<?php ob_start(); ?>
 					<p class="field-url description description-wide">
 						<label for="edit-menu-item-url-<?php echo $item_id; ?>">
@@ -138,6 +138,7 @@ class NavMenuEditWithCustomItemTypes extends Walker_Nav_Menu_Edit {
 					</p>
 					<?php $nav_menu_item_fields['custom'] = ob_get_clean(); ?>
 				<?php endif; ?>
+
 				<?php ob_start(); ?>
 				<p class="field-title description description-wide">
 					<label for="edit-menu-item-title-<?php echo $item_id; ?>">
@@ -146,6 +147,7 @@ class NavMenuEditWithCustomItemTypes extends Walker_Nav_Menu_Edit {
 					</label>
 				</p>
 				<?php $nav_menu_item_fields['title'] = ob_get_clean(); ?>
+
 				<?php ob_start(); ?>
 				<p class="field-title-attribute field-attr-title description description-wide">
 					<label for="edit-menu-item-attr-title-<?php echo $item_id; ?>">
@@ -154,6 +156,7 @@ class NavMenuEditWithCustomItemTypes extends Walker_Nav_Menu_Edit {
 					</label>
 				</p>
 				<?php $nav_menu_item_fields['attr-title'] = ob_get_clean(); ?>
+
 				<?php ob_start(); ?>
 				<p class="field-link-target description">
 					<label for="edit-menu-item-target-<?php echo $item_id; ?>">
@@ -162,6 +165,7 @@ class NavMenuEditWithCustomItemTypes extends Walker_Nav_Menu_Edit {
 					</label>
 				</p>
 				<?php $nav_menu_item_fields['link-target'] = ob_get_clean(); ?>
+
 				<?php ob_start(); ?>
 				<p class="field-css-classes description description-thin">
 					<label for="edit-menu-item-classes-<?php echo $item_id; ?>">
@@ -170,6 +174,7 @@ class NavMenuEditWithCustomItemTypes extends Walker_Nav_Menu_Edit {
 					</label>
 				</p>
 				<?php $nav_menu_item_fields['css-classes'] = ob_get_clean(); ?>
+
 				<?php ob_start(); ?>
 				<p class="field-xfn description description-thin">
 					<label for="edit-menu-item-xfn-<?php echo $item_id; ?>">
@@ -178,6 +183,7 @@ class NavMenuEditWithCustomItemTypes extends Walker_Nav_Menu_Edit {
 					</label>
 				</p>
 				<?php $nav_menu_item_fields['xfn'] = ob_get_clean(); ?>
+
 				<?php ob_start(); ?>
 				<p class="field-description description description-wide">
 					<label for="edit-menu-item-description-<?php echo $item_id; ?>">
@@ -211,35 +217,46 @@ class NavMenuEditWithCustomItemTypes extends Walker_Nav_Menu_Edit {
 				echo join( "\n", array_values( $nav_menu_item_fields ) );
 				?>
 
-				<p class="field-move hide-if-no-js description description-wide">
-					<label>
-						<span><?php _e( 'Move' ); ?></span>
-						<a href="#" class="menus-move menus-move-up" data-dir="up"><?php _e( 'Up one' ); ?></a>
-						<a href="#" class="menus-move menus-move-down" data-dir="down"><?php _e( 'Down one' ); ?></a>
-						<a href="#" class="menus-move menus-move-left" data-dir="left"></a>
-						<a href="#" class="menus-move menus-move-right" data-dir="right"></a>
-						<a href="#" class="menus-move menus-move-top" data-dir="top"><?php _e( 'To the top' ); ?></a>
-					</label>
-				</p>
+				<fieldset class="field-move hide-if-no-js description description-wide">
+					<span class="field-move-visual-label" aria-hidden="true"><?php _e( 'Move' ); ?></span>
+					<button type="button" class="button-link menus-move menus-move-up" data-dir="up"><?php _e( 'Up one' ); ?></button>
+					<button type="button" class="button-link menus-move menus-move-down" data-dir="down"><?php _e( 'Down one' ); ?></button>
+					<button type="button" class="button-link menus-move menus-move-left" data-dir="left"></button>
+					<button type="button" class="button-link menus-move menus-move-right" data-dir="right"></button>
+					<button type="button" class="button-link menus-move menus-move-top" data-dir="top"><?php _e( 'To the top' ); ?></button>
+				</fieldset>
 
 				<div class="menu-item-actions description-wide submitbox">
 					<?php if ( 'custom' != $item->type && $original_title !== false ) : ?>
 						<p class="link-to-original">
-							<?php printf( __('Original: %s'), '<a href="' . esc_attr( $item->url ) . '">' . esc_html( $original_title ) . '</a>' ); ?>
+							<?php
+							/* translators: %s: original title */
+							printf( __( 'Original: %s' ), '<a href="' . esc_attr( $item->url ) . '">' . esc_html( $original_title ) . '</a>' );
+							?>
 						</p>
 					<?php endif; ?>
 					<a class="item-delete submitdelete deletion" id="delete-<?php echo $item_id; ?>" href="<?php
 					echo wp_nonce_url(
 						add_query_arg(
 							array(
-								'action' => 'delete-menu-item',
+								'action'    => 'delete-menu-item',
 								'menu-item' => $item_id,
 							),
 							admin_url( 'nav-menus.php' )
 						),
 						'delete-menu_item_' . $item_id
-					); ?>"><?php _e( 'Remove' ); ?></a> <span class="meta-sep hide-if-no-js"> | </span> <a class="item-cancel submitcancel hide-if-no-js" id="cancel-<?php echo $item_id; ?>" href="<?php echo esc_url( add_query_arg( array( 'edit-menu-item' => $item_id, 'cancel' => time() ), admin_url( 'nav-menus.php' ) ) );
-						?>#menu-item-settings-<?php echo $item_id; ?>"><?php _e('Cancel'); ?></a>
+					);
+					?>"><?php _e( 'Remove' ); ?></a> <span class="meta-sep hide-if-no-js"> | </span> <a class="item-cancel submitcancel hide-if-no-js" id="cancel-<?php echo $item_id; ?>" href="<?php
+					echo esc_url(
+						add_query_arg(
+							array(
+								'edit-menu-item' => $item_id,
+								'cancel'         => time(),
+							),
+							admin_url( 'nav-menus.php' )
+						)
+					);
+					?>#menu-item-settings-<?php echo $item_id; ?>"><?php _e( 'Cancel' ); ?></a>
 				</div>
 
 				<input class="menu-item-data-db-id" type="hidden" name="menu-item-db-id[<?php echo $item_id; ?>]" value="<?php echo $item_id; ?>" />
