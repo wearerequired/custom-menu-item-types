@@ -5,9 +5,7 @@
  * @package Menu_Item_Types
  */
 
-namespace required\Custom_Menu_Item_Types;
-
-defined( 'WPINC' ) or die;
+namespace Required\CustomMenuItemTypes;
 
 /**
  * Menu_Item_Types class.
@@ -102,8 +100,8 @@ class Custom_Menu_Items {
 		return $item_output;
 	}
 
-	public function wp_edit_nav_menu_walker( $class, $menu_id ) {
-		return 'required\Custom_Menu_Item_Types\Walker_Custom_Item_Types';
+	public function wp_edit_nav_menu_walker() {
+		return Walker_Custom_Item_Types::class;
 	}
 
 	public function wp_nav_menu_item_fields( $nav_menu_item_fields, $context ) {

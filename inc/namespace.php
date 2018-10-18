@@ -1,6 +1,6 @@
 <?php
 
-namespace required\Custom_Menu_Item_Types;
+namespace Required\CustomMenuItemTypes;
 
 /**
  * Bootstraps the plugin.
@@ -11,7 +11,7 @@ function bootstrap() {
 	$custom_menu_items = new Custom_Menu_Items();
 	add_action( 'admin_init', [ $custom_menu_items, 'add_meta_box' ] );
 	add_filter( 'wp_setup_nav_menu_item', [ $custom_menu_items, 'customize_menu_item_label' ] );
-	add_filter( 'wp_edit_nav_menu_walker', [ $custom_menu_items, 'wp_edit_nav_menu_walker' ], 10, 2 );
+	add_filter( 'wp_edit_nav_menu_walker', [ $custom_menu_items, 'wp_edit_nav_menu_walker' ] );
 	add_filter( 'wp_nav_menu_item_fields', [ $custom_menu_items, 'wp_nav_menu_item_fields' ], 10, 2 );
 	add_action( 'wp_update_nav_menu_item', [ $custom_menu_items, 'wp_update_nav_menu_item' ], 10, 3 );
 	add_filter( 'walker_nav_menu_start_el', [ $custom_menu_items, 'nav_menu_start_el' ], 10, 4 );

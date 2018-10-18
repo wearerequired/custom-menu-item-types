@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "required\\Custom_Menu_Item_Types\\": [
+            "Required\\CustomMenuItemTypes\\": [
                 "inc/"
             ]
         }

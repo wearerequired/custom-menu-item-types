@@ -7,7 +7,7 @@
  * @since 4.4.0
  */
 
-namespace required\Custom_Menu_Item_Types;
+namespace Required\CustomMenuItemTypes;
 
 /**
  * Create HTML list of nav menu input items.
@@ -255,4 +255,4 @@ class Walker_Custom_Item_Types extends \Walker_Nav_Menu_Edit {
 		$output .= ob_get_clean();
 	}
 
-} // Walker_Nav_Menu_Edit
+}
