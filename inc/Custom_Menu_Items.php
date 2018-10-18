@@ -35,6 +35,7 @@ class Custom_Menu_Items {
 		if ( 'custom' !== $menu_item->type ) {
 			return $menu_item;
 		}
+
 		switch ( $menu_item->url ) {
 			case '#line_break':
 				$menu_item->type_label = __( 'Line Break', 'custom-menu-item-types' );
@@ -46,10 +47,13 @@ class Custom_Menu_Items {
 				$menu_item->type_label = __( 'Headline', 'custom-menu-item-types' );
 				break;
 		}
-		$menu_item->rcmit_type = ! isset( $menu_item->rcmit_type ) ? get_post_meta( $menu_item->ID, '_menu_item_rcmit_type', true ) : $menu_item->rcmit_type;
-		$menu_item->rcmit_button_text = ! isset( $menu_item->rcmit_button_text ) ? get_post_meta( $menu_item->ID, '_menu_item_rcmit_button_text', true ) : $menu_item->rcmit_button_text;
-		$menu_item->rcmit_shortcode = ! isset( $menu_item->rcmit_shortcode ) ? get_post_meta( $menu_item->ID, '_menu_item_rcmit_shortcode', true ) : $menu_item->rcmit_shortcode;
-		$menu_item->rcmit_column = ! isset( $menu_item->rcmit_column ) ? get_post_meta( $menu_item->ID, '_menu_item_rcmit_column', true ) : $menu_item->rcmit_column;
+
+		$menu_item->rcmit_type          = $menu_item->rcmit_type ?? get_post_meta( $menu_item->ID, '_menu_item_rcmit_type', true );
+		$menu_item->rcmit_button_text   = $menu_item->rcmit_button_text ?? get_post_meta( $menu_item->ID, '_menu_item_rcmit_button_text', true );
+		$menu_item->rcmit_shortcode     = $menu_item->rcmit_shortcode ?? get_post_meta( $menu_item->ID, '_menu_item_rcmit_shortcode', true );
+		$menu_item->rcmit_column        = $menu_item->rcmit_column ?? get_post_meta( $menu_item->ID, '_menu_item_rcmit_column', true );
+		$menu_item->rcmit_heading_level = $menu_item->rcmit_heading_level ?? get_post_meta( $menu_item->ID, '_menu_item_rcmit_heading_level', true );
+
 		switch ( $menu_item->rcmit_type ) {
 			case 'highlight_box':
 				$menu_item->type_label = __( 'Highlight Box', 'custom-menu-item-types' );
@@ -58,6 +62,7 @@ class Custom_Menu_Items {
 				$menu_item->type_label = __( 'Newsletter Box', 'custom-menu-item-types' );
 				break;
 		}
+
 		return $menu_item;
 	}
 
@@ -65,13 +70,16 @@ class Custom_Menu_Items {
 		if ( 'custom' !== $item->type ) {
 			return $item_output;
 		}
+
 		/** This filter is documented in wp-includes/post-template.php */
 		$title = apply_filters( 'the_title', $item->title, $item->ID );
 		/** This filter is documented in wp-includes\nav-menu-template.php */
 		$title = apply_filters( 'nav_menu_item_title', $title, $item, $args, $depth );
-		$item->rcmit_type = ! isset( $item->rcmit_type ) ? get_post_meta( $item->ID, '_menu_item_rcmit_type', true ) : $item->rcmit_type;
-		$item->rcmit_button_text = ! isset( $item->rcmit_button_text ) ? get_post_meta( $item->ID, '_menu_item_rcmit_button_text', true ) : $item->rcmit_button_text;
-		$item->rcmit_shortcode = ! isset( $item->rcmit_shortcode ) ? get_post_meta( $item->ID, '_menu_item_rcmit_shortcode', true ) : $item->rcmit_shortcode;
+
+		$item->rcmit_type        = $item->rcmit_type ?? get_post_meta( $item->ID, '_menu_item_rcmit_type', true );
+		$item->rcmit_button_text = $item->rcmit_button_text ?? get_post_meta( $item->ID, '_menu_item_rcmit_button_text', true );
+		$item->rcmit_shortcode   = $item->rcmit_shortcode ?? get_post_meta( $item->ID, '_menu_item_rcmit_shortcode', true );
+
 		switch ( $item->url ) {
 			case '#line_break':
 				$item_output = '<hr>';
@@ -80,13 +88,14 @@ class Custom_Menu_Items {
 				$item_output = '';
 				break;
 			case '#custom_headline':
-				$item_output = '<h4>' . $item->post_title . '</h4>';
+				$heading_level = $item->rcmit_heading_level ?: '4';
+				$item_output   = "<h{$heading_level}>{$item->post_title}</h{$heading_level}>";
 				break;
 		}
 
 		switch ( $item->rcmit_type ) {
 			case 'highlight_box':
-				$item_output = $args->before;
+				$item_output  = $args->before;
 				$item_output .= '<h4>' . $title . '</h4>';
 				$item_output .= '<p>' . esc_html( $item->description ) . '</p>';
 				$item_output .= '<a class="button" href="' . esc_url( $item->url ) . '">';
@@ -163,6 +172,24 @@ class Custom_Menu_Items {
 					<input type="hidden" id="edit-menu-item-url-<?php echo $context['item']->ID; ?>" class="widefat code edit-menu-item-url" name="menu-item-url[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->url ); ?>" />
 				<?php
 				$nav_menu_item_fields['custom'] = ob_get_clean();
+
+				ob_start();
+				?>
+				<p class="field-heading-level description description-wide">
+					<label for="edit-menu-item-heading-level-<?php echo $context['item']->ID; ?>">
+						<?php _e( 'Heading level', 'custom-menu-item-types' ); ?><br />
+						<select name="menu-item-heading-level[<?php echo $context['item']->ID; ?>]">
+							<?php $heading_level = $context['item']->rcmit_heading_level ?: '4'; ?>
+							<option value="2" <?php selected( $heading_level, '2' ) ?>><?php _e( 'H2', 'custom-menu-item-types' ); ?></option>
+							<option value="3" <?php selected( $heading_level, '3' ) ?>><?php _e( 'H3', 'custom-menu-item-types' ); ?></option>
+							<option value="4" <?php selected( $heading_level, '4' ) ?>><?php _e( 'H4', 'custom-menu-item-types' ); ?></option>
+							<option value="5" <?php selected( $heading_level, '5' ) ?>><?php _e( 'H5', 'custom-menu-item-types' ); ?></option>
+							<option value="6" <?php selected( $heading_level, '6' ) ?>><?php _e( 'H6', 'custom-menu-item-types' ); ?></option>
+						</select>
+					</label>
+				</p>
+				<?php
+				$nav_menu_item_fields['heading_level'] = ob_get_clean();
 
 		}
 
@@ -327,13 +354,14 @@ class Custom_Menu_Items {
 		if ( ! current_user_can( 'edit_theme_options' ) ) {
 			return;
 		}
+
 		// Add new menu item via ajax.
 		if ( isset( $_REQUEST['menu-settings-column-nonce'] ) && wp_verify_nonce( $_REQUEST['menu-settings-column-nonce'], 'add-menu_item' ) ) {
-			if ( ! empty( $_POST['menu-item'][ '-1' ]['menu-item-url'] ) && in_array( $_POST['menu-item'][ '-1' ]['menu-item-url'], array( 'newsletter_box', 'highlight_box' ) ) ) {
+			if ( ! empty( $_POST['menu-item']['-1']['menu-item-url'] ) && in_array( $_POST['menu-item']['-1']['menu-item-url'], array( 'newsletter_box', 'highlight_box' ) ) ) {
 				update_post_meta(
 					$menu_item_db_id,
 					'_menu_item_rcmit_type',
-					sanitize_text_field( $_POST['menu-item'][ '-1' ]['menu-item-url'] )
+					sanitize_text_field( $_POST['menu-item']['-1']['menu-item-url'] )
 				);
 				update_post_meta(
 					$menu_item_db_id,
@@ -342,7 +370,8 @@ class Custom_Menu_Items {
 				);
 			}
 		}
-		// Updaate settings for existsing menu items.
+
+		// Update settings for existing menu items.
 		if ( isset( $_REQUEST['update-nav-menu-nonce'] ) && wp_verify_nonce( $_REQUEST['update-nav-menu-nonce'], 'update-nav_menu' ) ) {
 			if ( ! empty( $_POST['menu-item-button-text'][ $menu_item_db_id ] ) ) {
 				update_post_meta(
@@ -351,6 +380,7 @@ class Custom_Menu_Items {
 					sanitize_text_field( $_POST['menu-item-button-text'][ $menu_item_db_id ] )
 				);
 			}
+
 			if ( ! empty( $_POST['menu-item-shortcode'][ $menu_item_db_id ] ) ) {
 				update_post_meta(
 					$menu_item_db_id,
@@ -358,11 +388,20 @@ class Custom_Menu_Items {
 					sanitize_text_field( $_POST['menu-item-shortcode'][ $menu_item_db_id ] )
 				);
 			}
+
 			if ( ! empty( $_POST['menu-item-column'][ $menu_item_db_id ] ) ) {
 				update_post_meta(
 					$menu_item_db_id,
 					'_menu_item_rcmit_column',
 					sanitize_text_field( $_POST['menu-item-column'][ $menu_item_db_id ] )
+				);
+			}
+
+			if ( ! empty( $_POST['menu-item-heading-level'][ $menu_item_db_id ] ) ) {
+				update_post_meta(
+					$menu_item_db_id,
+					'_menu_item_rcmit_heading_level',
+					sanitize_text_field( $_POST['menu-item-heading-level'][ $menu_item_db_id ] )
 				);
 			}
 		}
