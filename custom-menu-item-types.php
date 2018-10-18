@@ -8,8 +8,7 @@
  * Author URI:  https://required.com
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain: menu-item-types
- * Domain Path: /languages
+ * Text Domain: custom-menu-item-types
  *
  * @package Menu_Item_Types
  */

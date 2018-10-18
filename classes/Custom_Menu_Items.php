@@ -37,13 +37,13 @@ class Custom_Menu_Items {
 		}
 		switch ( $menu_item->url ) {
 			case '#line_break':
-				$menu_item->type_label = __( 'Line Break', 'menu-item-types' );
+				$menu_item->type_label = __( 'Line Break', 'custom-menu-item-types' );
 				break;
 			case '#column_end':
-				$menu_item->type_label = __( 'Column End', 'menu-item-types' );
+				$menu_item->type_label = __( 'Column End', 'custom-menu-item-types' );
 				break;
 			case '#custom_headline':
-				$menu_item->type_label = __( 'Headline', 'menu-item-types' );
+				$menu_item->type_label = __( 'Headline', 'custom-menu-item-types' );
 				break;
 		}
 		$menu_item->rcmit_type = ! isset( $menu_item->rcmit_type ) ? get_post_meta( $menu_item->ID, '_menu_item_rcmit_type', true ) : $menu_item->rcmit_type;
@@ -52,10 +52,10 @@ class Custom_Menu_Items {
 		$menu_item->rcmit_column = ! isset( $menu_item->rcmit_column ) ? get_post_meta( $menu_item->ID, '_menu_item_rcmit_column', true ) : $menu_item->rcmit_column;
 		switch ( $menu_item->rcmit_type ) {
 			case 'highlight_box':
-				$menu_item->type_label = __( 'Highlight Box', 'menu-item-types' );
+				$menu_item->type_label = __( 'Highlight Box', 'custom-menu-item-types' );
 				break;
 			case 'newsletter_box':
-				$menu_item->type_label = __( 'Newsletter Box', 'menu-item-types' );
+				$menu_item->type_label = __( 'Newsletter Box', 'custom-menu-item-types' );
 				break;
 		}
 		return $menu_item;
@@ -115,7 +115,7 @@ class Custom_Menu_Items {
 				ob_start(); ?>
 					<p class="field-column description description-wide">
 						<label for="edit-menu-item-column-<?php echo $context['item']->ID; ?>">
-							<?php _e( 'Width of next column', 'menu-item-types' ); ?><br />
+							<?php _e( 'Width of next column', 'custom-menu-item-types' ); ?><br />
 							<select name="menu-item-column[<?php echo $context['item']->ID; ?>]">
 								<option value="col-3" <?php selected( $context['item']->rcmit_column, 'col-3' ) ?>>Col 3</option>
 								<option value="col-4" <?php selected( $context['item']->rcmit_column, 'col-4' ) ?>>Col 4</option>
@@ -152,7 +152,7 @@ class Custom_Menu_Items {
 				ob_start(); ?>
 				<p class="field-title description description-wide">
 					<label for="edit-menu-item-title-<?php echo $context['item']->ID; ?>">
-						<?php _e( 'Box Header', 'menu-item-types' ); ?><br />
+						<?php _e( 'Box Header', 'custom-menu-item-types' ); ?><br />
 						<input type="text" id="edit-menu-item-title-<?php echo $context['item']->ID; ?>" class="widefat edit-menu-item-title" name="menu-item-title[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->title ); ?>" />
 					</label>
 				</p>
@@ -168,7 +168,7 @@ class Custom_Menu_Items {
 				<?php ob_start(); ?>
 				<p class="field-url description description-wide">
 					<label for="edit-menu-item-url-<?php echo $context['item']->ID; ?>">
-						<?php _e( 'Button URL', 'menu-item-types' ); ?><br />
+						<?php _e( 'Button URL', 'custom-menu-item-types' ); ?><br />
 						<input type="text" id="edit-menu-item-url-<?php echo $context['item']->ID; ?>" class="widefat code edit-menu-item-url" name="menu-item-url[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->url ); ?>" />
 					</label>
 				</p>
@@ -189,7 +189,7 @@ class Custom_Menu_Items {
 				<?php ob_start(); ?>
 				<p class="field-shortcode description description-wide">
 					<label for="edit-menu-item-shortcode-<?php echo $context['item']->ID; ?>">
-						<?php _e( 'Shortcode', 'menu-item-types' ); ?><br />
+						<?php _e( 'Shortcode', 'custom-menu-item-types' ); ?><br />
 						<input type="text" id="edit-menu-item-shortcode-<?php echo $context['item']->ID; ?>" class="widefat code edit-menu-item-shortcode" name="menu-item-shortcode[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->rcmit_shortcode ); ?>" />
 					</label>
 				</p>
@@ -222,43 +222,43 @@ class Custom_Menu_Items {
 				<ul id ="custom-item-types-checklist" class="categorychecklist form-no-clear">
 					<li>
 						<label class="menu-item-title">
-							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Column End', 'menu-item-types' ); ?>
+							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Column End', 'custom-menu-item-types' ); ?>
 						</label>
 						<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
-						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Column End', 'menu-item-types' ); ?>">
+						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Column End', 'custom-menu-item-types' ); ?>">
 						<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="#column_end">
 					</li>
 					<li>
 						<label class="menu-item-title">
-							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Line Break', 'menu-item-types' ); ?>
+							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Line Break', 'custom-menu-item-types' ); ?>
 						</label>
 						<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
-						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Line Break', 'menu-item-types' ); ?>">
+						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Line Break', 'custom-menu-item-types' ); ?>">
 						<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="#line_break">
 					</li>
 					<li>
 						<label class="menu-item-title">
-							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Headline', 'menu-item-types' ); ?>
+							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Headline', 'custom-menu-item-types' ); ?>
 						</label>
 						<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
-						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Headline', 'menu-item-types' ); ?>">
+						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Headline', 'custom-menu-item-types' ); ?>">
 						<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="#custom_headline">
 					</li>
 					<li>
 						<label class="menu-item-title">
-							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Highlight Box', 'menu-item-types' ); ?>
+							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Highlight Box', 'custom-menu-item-types' ); ?>
 						</label>
 						<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
 						<input type="hidden" class="menu-item-rcmit-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="highlight_box">
-						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Highlight Box', 'menu-item-types' ); ?>">
+						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Highlight Box', 'custom-menu-item-types' ); ?>">
 					</li>
 					<li>
 						<label class="menu-item-title">
-							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Newsletter Box', 'menu-item-types' ); ?>
+							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Newsletter Box', 'custom-menu-item-types' ); ?>
 						</label>
 						<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
 						<input type="hidden" class="menu-item-rcmit-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="newsletter_box">
-						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Newsletter Box', 'menu-item-types' ); ?>">
+						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Newsletter Box', 'custom-menu-item-types' ); ?>">
 					</li>
 				</ul>
 			</div>
@@ -266,7 +266,7 @@ class Custom_Menu_Items {
 
 			<p class="button-controls wp-clearfix">
 				<span class="add-to-menu">
-					<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'menu-item-types' ); ?>" name="add-custom-menu-item" id="submit-custom-item-types" />
+					<input type="submit"<?php wp_nav_menu_disabled_check( $nav_menu_selected_id ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'custom-menu-item-types' ); ?>" name="add-custom-menu-item" id="submit-custom-item-types" />
 					<span class="spinner"></span>
 				</span>
 			</p>
