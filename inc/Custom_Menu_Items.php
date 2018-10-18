@@ -106,6 +106,19 @@ class Custom_Menu_Items {
 		return NavMenuEditWithCustomItemTypes::class;
 	}
 
+	/**
+	 * Filters list of settings fields of a menu item.
+	 *
+	 * @param array $nav_menu_item_fields Mapping of ID to the field paragraph HTML.
+	 * @param array $context {
+	 *     Context for applied filter.
+	 *
+	 *     @type \Walker_Nav_Menu_Edit $walker Nav menu walker.
+	 *     @type object                $item   Menu item data object.
+	 *     @type int                   $depth  Current depth.
+	 * }
+	 * @return array Mapping of ID to the field paragraph HTML.
+	 */
 	public function nav_menu_item_fields( $nav_menu_item_fields, $context ) {
 		if ( 'custom' !== $context['item']->type ) {
 			return $nav_menu_item_fields;
@@ -113,7 +126,8 @@ class Custom_Menu_Items {
 
 		switch ( $context['item']->url ) {
 			case '#column_end':
-				ob_start(); ?>
+				ob_start();
+				?>
 					<p class="field-column description description-wide">
 						<label for="edit-menu-item-column-<?php echo $context['item']->ID; ?>">
 							<?php _e( 'Width of next column', 'custom-menu-item-types' ); ?><br />
@@ -124,80 +138,113 @@ class Custom_Menu_Items {
 							</select>
 						</label>
 					</p>
-				<?php $nav_menu_item_fields['column_width'] = ob_get_clean();
+				<?php
+				$nav_menu_item_fields['column_width'] = ob_get_clean();
+
 			case '#line_break':
 				unset( $nav_menu_item_fields['css-classes'] );
-				ob_start(); ?>
+
+				ob_start();
+				?>
 					<input type="hidden" id="edit-menu-item-title-<?php echo $context['item']->ID; ?>" class="widefat edit-menu-item-title" name="menu-item-title[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->title ); ?>" />
-				<?php $nav_menu_item_fields['title'] = ob_get_clean();
+				<?php
+				$nav_menu_item_fields['title'] = ob_get_clean();
+
 			case '#custom_headline':
-				unset( $nav_menu_item_fields['attr-title'] );
-				unset( $nav_menu_item_fields['link-target'] );
-				unset( $nav_menu_item_fields['xfn'] );
-				unset( $nav_menu_item_fields['description'] );
-				ob_start(); ?>
+				unset(
+					$nav_menu_item_fields['attr-title'],
+					$nav_menu_item_fields['link-target'],
+					$nav_menu_item_fields['xfn'],
+					$nav_menu_item_fields['description']
+				);
+
+				ob_start();
+				?>
 					<input type="hidden" id="edit-menu-item-url-<?php echo $context['item']->ID; ?>" class="widefat code edit-menu-item-url" name="menu-item-url[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->url ); ?>" />
-				<?php $nav_menu_item_fields['custom'] = ob_get_clean();
-				break;
+				<?php
+				$nav_menu_item_fields['custom'] = ob_get_clean();
+
 		}
-		if ( ! empty( $context['item']->rcmit_type ) ) { ?>
+
+		if ( ! empty( $context['item']->rcmit_type ) ) {
+			?>
 			<input class="menu-item-data-rcmit-type" type="hidden" name="menu-item-rcmit-type[<?php echo $context['item']->ID; ?>]" value="<?php echo $context['item']->rcmit_type; ?>" />
 			<?php
-			unset( $nav_menu_item_fields['title'] );
-			unset( $nav_menu_item_fields['custom'] );
-			unset( $nav_menu_item_fields['attr-title'] );
-			unset( $nav_menu_item_fields['link-target'] );
-			unset( $nav_menu_item_fields['xfn'] );
+			unset(
+				$nav_menu_item_fields['title'],
+				$nav_menu_item_fields['custom'],
+				$nav_menu_item_fields['attr-title'],
+				$nav_menu_item_fields['link-target'],
+				$nav_menu_item_fields['xfn']
+			);
+
 			$new_nav_menu_item_fields = array();
 			if ( 'highlight_box' === $context['item']->rcmit_type ) {
-				ob_start(); ?>
+				ob_start();
+				?>
 				<p class="field-title description description-wide">
 					<label for="edit-menu-item-title-<?php echo $context['item']->ID; ?>">
 						<?php _e( 'Box Header', 'custom-menu-item-types' ); ?><br />
 						<input type="text" id="edit-menu-item-title-<?php echo $context['item']->ID; ?>" class="widefat edit-menu-item-title" name="menu-item-title[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->title ); ?>" />
 					</label>
 				</p>
-				<?php $new_nav_menu_item_fields['title'] = ob_get_clean(); ?>
-				<?php ob_start(); ?>
+				<?php
+				$new_nav_menu_item_fields['title'] = ob_get_clean();
+
+				ob_start();
+				?>
 				<p class="field-button-text description description-wide">
 					<label for="edit-menu-item-button-text-<?php echo $context['item']->ID; ?>">
 						<?php _e( 'Button Text' ); ?><br />
 						<input type="text" id="edit-menu-item-button-text-<?php echo $context['item']->ID; ?>" class="widefat code edit-menu-item-button-text" name="menu-item-button-text[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->rcmit_button_text ); ?>" />
 					</label>
 				</p>
-				<?php $new_nav_menu_item_fields['button_text'] = ob_get_clean(); ?>
-				<?php ob_start(); ?>
+				<?php
+				$new_nav_menu_item_fields['button_text'] = ob_get_clean();
+
+				ob_start();
+				?>
 				<p class="field-url description description-wide">
 					<label for="edit-menu-item-url-<?php echo $context['item']->ID; ?>">
 						<?php _e( 'Button URL', 'custom-menu-item-types' ); ?><br />
 						<input type="text" id="edit-menu-item-url-<?php echo $context['item']->ID; ?>" class="widefat code edit-menu-item-url" name="menu-item-url[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->url ); ?>" />
 					</label>
 				</p>
-				<?php $new_nav_menu_item_fields['highlight_box'] = ob_get_clean(); ?>
-				<?php $new_nav_menu_item_fields['description'] = $nav_menu_item_fields['description'];
-			}
-			if ( 'newsletter_box' === $context['item']->rcmit_type ) {
+				<?php
+				$new_nav_menu_item_fields['highlight_box'] = ob_get_clean();
 
-				ob_start(); ?>
+				$new_nav_menu_item_fields['description'] = $nav_menu_item_fields['description'];
+			}
+
+			if ( 'newsletter_box' === $context['item']->rcmit_type ) {
+				ob_start();
+				?>
 				<p class="field-title description description-wide">
 					<label for="edit-menu-item-title-<?php echo $context['item']->ID; ?>">
 						<?php _e( 'Header' ); ?><br />
 						<input type="text" id="edit-menu-item-title-<?php echo $context['item']->ID; ?>" class="widefat edit-menu-item-title" name="menu-item-title[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->title ); ?>" />
 					</label>
 				</p>
-				<?php $new_nav_menu_item_fields['title'] = ob_get_clean(); ?>
-				<?php $new_nav_menu_item_fields['description'] = $nav_menu_item_fields['description']; ?>
-				<?php ob_start(); ?>
+				<?php
+				$new_nav_menu_item_fields['title'] = ob_get_clean();
+
+				$new_nav_menu_item_fields['description'] = $nav_menu_item_fields['description'];
+
+				ob_start();
+				?>
 				<p class="field-shortcode description description-wide">
 					<label for="edit-menu-item-shortcode-<?php echo $context['item']->ID; ?>">
 						<?php _e( 'Shortcode', 'custom-menu-item-types' ); ?><br />
 						<input type="text" id="edit-menu-item-shortcode-<?php echo $context['item']->ID; ?>" class="widefat code edit-menu-item-shortcode" name="menu-item-shortcode[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->rcmit_shortcode ); ?>" />
 					</label>
 				</p>
-				<?php $new_nav_menu_item_fields['newsletter_box_shortcode'] = ob_get_clean();
+				<?php
+				$new_nav_menu_item_fields['newsletter_box_shortcode'] = ob_get_clean();
 			}
+
 			$nav_menu_item_fields = array_merge( $new_nav_menu_item_fields, $nav_menu_item_fields );
 		}
+
 		return $nav_menu_item_fields;
 	}
 
