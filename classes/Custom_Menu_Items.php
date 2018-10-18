@@ -45,9 +45,6 @@ class Custom_Menu_Items {
 			case '#custom_headline':
 				$menu_item->type_label = __( 'Headline', 'menu-item-types' );
 				break;
-			case '#pll_switcher':
-				$menu_item->type_label = __( 'Language Switcher', 'menu-item-types' );
-				break;
 		}
 		$menu_item->rcmit_type = ! isset( $menu_item->rcmit_type ) ? get_post_meta( $menu_item->ID, '_menu_item_rcmit_type', true ) : $menu_item->rcmit_type;
 		$menu_item->rcmit_button_text = ! isset( $menu_item->rcmit_button_text ) ? get_post_meta( $menu_item->ID, '_menu_item_rcmit_button_text', true ) : $menu_item->rcmit_button_text;
