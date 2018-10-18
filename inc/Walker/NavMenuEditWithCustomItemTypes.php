@@ -196,25 +196,25 @@ class NavMenuEditWithCustomItemTypes extends Walker_Nav_Menu_Edit {
 
 				<?php
 				/**
-				 * Filter the nav menu fields to edit.
+				 * Filters the nav menu fields to edit.
 				 *
 				 * This filter applies on the nav menus admin page for a specific nav menu item.
 				 *
-				 * @since 4.5.0
+				 * @since 1.0.0
 				 *
 				 * @param array $nav_menu_item_fields Mapping of ID to the field paragraph HTML.
 				 * @param array $context {
 				 *     Context for applied filter.
 				 *
-				 *     @type Walker_Nav_Menu_Edit $walker Nav menu walker.
-				 *     @type object               $item   Menu item data object.
-				 *     @type int                  $depth  Current depth.
+				 *     @type \Walker_Nav_Menu_Edit $walker Nav menu walker.
+				 *     @type object                $item   Menu item data object.
+				 *     @type int                   $depth  Current depth.
 				 * }
 				 */
 				$walker = $this;
-				$nav_menu_item_fields = apply_filters( 'wp_nav_menu_item_fields', $nav_menu_item_fields, compact( 'item', 'depth', 'walker' ) );
+				$nav_menu_item_fields = apply_filters( 'custom_menu_item_types.nav_menu_item_fields', $nav_menu_item_fields, compact( 'item', 'depth', 'walker' ) );
 
-				echo join( "\n", array_values( $nav_menu_item_fields ) );
+				echo implode( "\n", $nav_menu_item_fields );
 				?>
 
 				<fieldset class="field-move hide-if-no-js description description-wide">

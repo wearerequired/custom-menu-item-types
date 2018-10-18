@@ -106,10 +106,11 @@ class Custom_Menu_Items {
 		return NavMenuEditWithCustomItemTypes::class;
 	}
 
-	public function wp_nav_menu_item_fields( $nav_menu_item_fields, $context ) {
+	public function nav_menu_item_fields( $nav_menu_item_fields, $context ) {
 		if ( 'custom' !== $context['item']->type ) {
 			return $nav_menu_item_fields;
 		}
+
 		switch ( $context['item']->url ) {
 			case '#column_end':
 				ob_start(); ?>
