@@ -3,7 +3,7 @@
  * Plugin Name: Custom Menu Item Types
  * Plugin URI:  https://github.com/wearerequired/custom-menu-item-types/
  * Description: Additional menu item types that can be easily added to the menu like line breaks and titles.
- * Version:     0.1.0
+ * Version:     2.0.0-alpha
  * Author:      required+
  * Author URI:  http://required.ch
  * License:     GPLv2+
