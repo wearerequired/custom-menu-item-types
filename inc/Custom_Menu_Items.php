@@ -20,7 +20,7 @@ class Custom_Menu_Items {
 	public function add_meta_box() {
 		add_meta_box(
 			'r_custom_item_types',
-			__( 'Custom Menu Types', 'polylang' ),
+			__( 'Custom Menu Types', 'custom-menu-item-types' ),
 			array( $this, 'r_custom_item_types' ),
 			'nav-menus',
 			'side',
@@ -141,9 +141,9 @@ class Custom_Menu_Items {
 						<label for="edit-menu-item-column-<?php echo $context['item']->ID; ?>">
 							<?php _e( 'Width of next column', 'custom-menu-item-types' ); ?><br />
 							<select name="menu-item-column[<?php echo $context['item']->ID; ?>]">
-								<option value="col-3" <?php selected( $context['item']->rcmit_column, 'col-3' ) ?>>Col 3</option>
-								<option value="col-4" <?php selected( $context['item']->rcmit_column, 'col-4' ) ?>>Col 4</option>
-								<option value="col-6" <?php selected( $context['item']->rcmit_column, 'col-6' ) ?>>Col 6</option>
+								<option value="col-3" <?php selected( $context['item']->rcmit_column, 'col-3' ) ?>><?php _e( 'Col 3', 'custom-menu-item-types' ); ?></option>
+								<option value="col-4" <?php selected( $context['item']->rcmit_column, 'col-4' ) ?>><?php _e( 'Col 4', 'custom-menu-item-types' ); ?></option>
+								<option value="col-6" <?php selected( $context['item']->rcmit_column, 'col-6' ) ?>><?php _e( 'Col 6', 'custom-menu-item-types' ); ?></option>
 							</select>
 						</label>
 					</p>
@@ -222,7 +222,7 @@ class Custom_Menu_Items {
 				?>
 				<p class="field-button-text description description-wide">
 					<label for="edit-menu-item-button-text-<?php echo $context['item']->ID; ?>">
-						<?php _e( 'Button Text' ); ?><br />
+						<?php _e( 'Button Text', 'custom-menu-item-types' ); ?><br />
 						<input type="text" id="edit-menu-item-button-text-<?php echo $context['item']->ID; ?>" class="widefat code edit-menu-item-button-text" name="menu-item-button-text[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->rcmit_button_text ); ?>" />
 					</label>
 				</p>
@@ -248,7 +248,7 @@ class Custom_Menu_Items {
 				?>
 				<p class="field-title description description-wide">
 					<label for="edit-menu-item-title-<?php echo $context['item']->ID; ?>">
-						<?php _e( 'Header' ); ?><br />
+						<?php _e( 'Header', 'custom-menu-item-types' ); ?><br />
 						<input type="text" id="edit-menu-item-title-<?php echo $context['item']->ID; ?>" class="widefat edit-menu-item-title" name="menu-item-title[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->title ); ?>" />
 					</label>
 				</p>
