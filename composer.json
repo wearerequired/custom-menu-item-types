@@ -16,6 +16,12 @@
             "role": "Developer"
         }
     ],
+    "keywords": [
+        "wordpress",
+        "navigation",
+        "menu",
+        "nav-menu"
+    ],
     "require": {
         "php": ">= 7.0",
         "wearerequired/wp-requirements-check": "^1.0"
