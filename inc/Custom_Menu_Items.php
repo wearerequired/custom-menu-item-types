@@ -20,7 +20,7 @@ class Custom_Menu_Items {
 	public function add_meta_box() {
 		add_meta_box(
 			'r_custom_item_types',
-			__( 'Custom Menu Types', 'custom-menu-item-types' ),
+			__( 'Custom Menu Item Types', 'custom-menu-item-types' ),
 			array( $this, 'r_custom_item_types' ),
 			'nav-menus',
 			'side',
