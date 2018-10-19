@@ -11,6 +11,14 @@ use Walker_Nav_Menu_Edit;
 /**
  * Extends Walker_Nav_Menu_Edit to provide a filter for settings fields.
  *
+ * Notes to make maintaining this class as easy as possible:
+ *   * The `start_el()` method should be an unmodified copy of `\Walker_Nav_Menu_Edit::start_el()` from
+ *     the latest stable WordPress version.
+ *   * The only differences are:
+ *      * `$nav_menu_item_fields` is defined as an empty array.
+ *      * The markup of each setting field is captured via output buffering and stored in `$nav_menu_item_fields`.
+ *      * A filter `custom_menu_item_types.nav_menu_item_fields` is added to allow filtering `$nav_menu_item_fields`.
+ *
  * @uses \Walker_Nav_Menu_Edit
  */
 class NavMenuEditWithCustomItemTypes extends Walker_Nav_Menu_Edit {
