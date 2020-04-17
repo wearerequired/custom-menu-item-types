@@ -263,7 +263,7 @@ class Custom_Menu_Items {
 				?>
 				<p class="field-shortcode description description-wide">
 					<label for="edit-menu-item-shortcode-<?php echo $context['item']->ID; ?>">
-						<?php _e( 'Shortcode Box', 'custom-menu-item-types' ); ?><br />
+						<?php _e( 'Shortcode', 'custom-menu-item-types' ); ?><br />
 						<input type="text" id="edit-menu-item-shortcode-<?php echo $context['item']->ID; ?>" class="widefat code edit-menu-item-shortcode" name="menu-item-shortcode[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->rcmit_shortcode ); ?>" />
 					</label>
 				</p>
