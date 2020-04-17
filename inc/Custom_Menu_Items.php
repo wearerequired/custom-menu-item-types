@@ -196,6 +196,10 @@ class Custom_Menu_Items {
 		}
 
 		if ( ! empty( $context['item']->rcmit_type ) ) {
+			// Migrate old type to new on-the-fly.
+			if ( 'newsletter_box' === $context['item']->rcmit_type ) {
+				$context['item']->rcmit_type = 'shortcode_box';
+			}
 			?>
 			<input class="menu-item-data-rcmit-type" type="hidden" name="menu-item-rcmit-type[<?php echo $context['item']->ID; ?>]" value="<?php echo $context['item']->rcmit_type; ?>" />
 			<?php
