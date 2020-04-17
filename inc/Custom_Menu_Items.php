@@ -38,7 +38,7 @@ class Custom_Menu_Items {
 
 		switch ( $menu_item->url ) {
 			case '#line_break':
-				$menu_item->type_label = __( 'Line Break', 'custom-menu-item-types' );
+				$menu_item->type_label = __( 'Separator', 'custom-menu-item-types' );
 				break;
 			case '#column_end':
 				$menu_item->type_label = __( 'Column End', 'custom-menu-item-types' );
@@ -59,7 +59,8 @@ class Custom_Menu_Items {
 				$menu_item->type_label = __( 'Highlight Box', 'custom-menu-item-types' );
 				break;
 			case 'newsletter_box':
-				$menu_item->type_label = __( 'Newsletter Box', 'custom-menu-item-types' );
+			case 'shortcode_box':
+				$menu_item->type_label = __( 'Shortcode Box', 'custom-menu-item-types' );
 				break;
 		}
 
@@ -104,6 +105,7 @@ class Custom_Menu_Items {
 				$item_output .= $args->after;
 				break;
 			case 'newsletter_box':
+			case 'shortcode_box':
 				$item_output = $args->before . '<div><h4>' . esc_html( $title ) . '</h4><p>' . esc_html( $item->description ) . '</p>' . do_shortcode( $item->rcmit_shortcode ) . '</div>' . $args->after;
 				break;
 		}
@@ -243,7 +245,7 @@ class Custom_Menu_Items {
 				$new_nav_menu_item_fields['description'] = $nav_menu_item_fields['description'];
 			}
 
-			if ( 'newsletter_box' === $context['item']->rcmit_type ) {
+			if ( 'shortcode_box' === $context['item']->rcmit_type || 'newsletter_box' === $context['item']->rcmit_type ) {
 				ob_start();
 				?>
 				<p class="field-title description description-wide">
@@ -261,12 +263,12 @@ class Custom_Menu_Items {
 				?>
 				<p class="field-shortcode description description-wide">
 					<label for="edit-menu-item-shortcode-<?php echo $context['item']->ID; ?>">
-						<?php _e( 'Shortcode', 'custom-menu-item-types' ); ?><br />
+						<?php _e( 'Shortcode Box', 'custom-menu-item-types' ); ?><br />
 						<input type="text" id="edit-menu-item-shortcode-<?php echo $context['item']->ID; ?>" class="widefat code edit-menu-item-shortcode" name="menu-item-shortcode[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->rcmit_shortcode ); ?>" />
 					</label>
 				</p>
 				<?php
-				$new_nav_menu_item_fields['newsletter_box_shortcode'] = ob_get_clean();
+				$new_nav_menu_item_fields['shortcode_box_shortcode'] = ob_get_clean();
 			}
 
 			$nav_menu_item_fields = array_merge( $new_nav_menu_item_fields, $nav_menu_item_fields );
@@ -308,7 +310,7 @@ class Custom_Menu_Items {
 							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Line Break', 'custom-menu-item-types' ); ?>
 						</label>
 						<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
-						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Line Break', 'custom-menu-item-types' ); ?>">
+						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Separator', 'custom-menu-item-types' ); ?>">
 						<input type="hidden" class="menu-item-url" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="#line_break">
 					</li>
 					<li>
@@ -329,11 +331,11 @@ class Custom_Menu_Items {
 					</li>
 					<li>
 						<label class="menu-item-title">
-							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Newsletter Box', 'custom-menu-item-types' ); ?>
+							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Shortcode Box', 'custom-menu-item-types' ); ?>
 						</label>
 						<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
-						<input type="hidden" class="menu-item-rcmit-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="newsletter_box">
-						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Newsletter Box', 'custom-menu-item-types' ); ?>">
+						<input type="hidden" class="menu-item-rcmit-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-url]" value="shortcode_box">
+						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Shortcode Box', 'custom-menu-item-types' ); ?>">
 					</li>
 				</ul>
 			</div>
@@ -357,7 +359,7 @@ class Custom_Menu_Items {
 
 		// Add new menu item via ajax.
 		if ( isset( $_REQUEST['menu-settings-column-nonce'] ) && wp_verify_nonce( $_REQUEST['menu-settings-column-nonce'], 'add-menu_item' ) ) {
-			if ( ! empty( $_POST['menu-item']['-1']['menu-item-url'] ) && in_array( $_POST['menu-item']['-1']['menu-item-url'], array( 'newsletter_box', 'highlight_box' ) ) ) {
+			if ( ! empty( $_POST['menu-item']['-1']['menu-item-url'] ) && in_array( $_POST['menu-item']['-1']['menu-item-url'], array( 'shortcode_box', 'highlight_box' ) ) ) {
 				update_post_meta(
 					$menu_item_db_id,
 					'_menu_item_rcmit_type',
