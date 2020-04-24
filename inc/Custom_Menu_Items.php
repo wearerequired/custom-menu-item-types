@@ -89,14 +89,16 @@ class Custom_Menu_Items {
 				$item_output = '';
 				break;
 			case '#custom_headline':
-				$heading_level = $item->rcmit_heading_level ?: '4';
-				$item_output   = "<h{$heading_level}>{$title}</h{$heading_level}>";
+				$item_output = sprintf(
+					'<h%1$s>%2$s</h%1$s>',
+					$item->rcmit_heading_level ?: '4',
+					esc_html( $title )
+				);
 				break;
 		}
 
 		switch ( $item->rcmit_type ) {
 			case 'highlight_box':
-				$heading_level = $item->rcmit_heading_level ?: '4';
 				$item_output = sprintf(
 					'%1$s<h%2$s>%3$s</h%2$s><p>%4$s</p><a class="button" href="%5$s">%6$s</a>%7$s',
 					$args->before,
@@ -110,7 +112,6 @@ class Custom_Menu_Items {
 				break;
 			case 'newsletter_box':
 			case 'shortcode_box':
-				$heading_level = $item->rcmit_heading_level ?: '4';
 				$item_output = sprintf(
 					'%1$s<div><h%2$s>%3$s</h%2$s><p>%4$s</p>%5$s</div>%6$s',
 					$args->before,
