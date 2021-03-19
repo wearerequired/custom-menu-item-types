@@ -164,8 +164,8 @@ class NavMenuEditWithCustomItemTypes extends Walker_Nav_Menu_Edit {
 			<?php $nav_menu_item_fields = array(); ?>
 
 			<div class="menu-item-settings wp-clearfix" id="menu-item-settings-<?php echo $item_id; ?>">
-				<?php ob_start(); ?>
 				<?php if ( 'custom' == $item->type ) : ?>
+					<?php ob_start(); ?>
 					<p class="field-url description description-wide">
 						<label for="edit-menu-item-url-<?php echo $item_id; ?>">
 							<?php _e( 'URL' ); ?><br />
