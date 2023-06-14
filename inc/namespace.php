@@ -13,7 +13,7 @@ function bootstrap() {
 	add_filter( 'wp_setup_nav_menu_item', [ $custom_menu_items, 'customize_menu_item_label' ] );
 	add_filter( 'wp_edit_nav_menu_walker', [ $custom_menu_items, 'wp_edit_nav_menu_walker' ] );
 	add_filter( 'custom_menu_item_types.nav_menu_item_fields', [ $custom_menu_items, 'nav_menu_item_fields' ], 10, 2 );
-	add_action( 'wp_update_nav_menu_item', [ $custom_menu_items, 'wp_update_nav_menu_item' ], 10, 3 );
+	add_action( 'wp_update_nav_menu_item', [ $custom_menu_items, 'wp_update_nav_menu_item' ], 10, 2 );
 	add_filter( 'walker_nav_menu_start_el', [ $custom_menu_items, 'nav_menu_start_el' ], 10, 4 );
 }
 add_action( 'plugins_loaded', __NAMESPACE__ . '\bootstrap' );

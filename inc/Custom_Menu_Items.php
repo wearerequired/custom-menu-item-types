@@ -382,7 +382,7 @@ class Custom_Menu_Items {
 		<?php
 	}
 
-	public function wp_update_nav_menu_item( $menu_id = 0, $menu_item_db_id = 0, $args ) {
+	public function wp_update_nav_menu_item( $menu_id = 0, $menu_item_db_id = 0 ) {
 		if ( ! current_user_can( 'edit_theme_options' ) ) {
 			return;
 		}
