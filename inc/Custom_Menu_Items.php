@@ -167,7 +167,12 @@ class Custom_Menu_Items {
 				$nav_menu_item_fields['column_width'] = ob_get_clean();
 				break;
 			case '#line_break':
-				unset( $nav_menu_item_fields['css-classes'] );
+				unset(
+					$nav_menu_item_fields['attr-title'],
+					$nav_menu_item_fields['link-target'],
+					$nav_menu_item_fields['xfn'],
+					$nav_menu_item_fields['description']
+				);
 
 				ob_start();
 				?>
@@ -176,6 +181,13 @@ class Custom_Menu_Items {
 				$nav_menu_item_fields['title'] = ob_get_clean();
 				break;
 			case '#custom_headline':
+				unset(
+					$nav_menu_item_fields['attr-title'],
+					$nav_menu_item_fields['link-target'],
+					$nav_menu_item_fields['xfn'],
+					$nav_menu_item_fields['description']
+				);
+
 				$nav_menu_item_fields = $this->header_dropdown( $nav_menu_item_fields, $context );
 				break;
 		}
@@ -269,13 +281,6 @@ class Custom_Menu_Items {
 	}
 
 	public function header_dropdown( $nav_menu_item_fields, $context ) {
-		unset(
-			$nav_menu_item_fields['attr-title'],
-			$nav_menu_item_fields['link-target'],
-			$nav_menu_item_fields['xfn'],
-			$nav_menu_item_fields['description']
-		);
-
 		ob_start();
 		?>
 			<input type="hidden" id="edit-menu-item-url-<?php echo $context['item']->ID; ?>" class="widefat code edit-menu-item-url" name="menu-item-url[<?php echo $context['item']->ID; ?>]" value="<?php echo esc_attr( $context['item']->url ); ?>" />
