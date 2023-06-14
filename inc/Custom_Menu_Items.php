@@ -337,7 +337,7 @@ class Custom_Menu_Items {
 					</li>
 					<li>
 						<label class="menu-item-title">
-							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Line Break', 'custom-menu-item-types' ); ?>
+							<input type="radio" class="menu-item-checkbox" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-object-id]" value="-1"> <?php _e( 'Separator', 'custom-menu-item-types' ); ?>
 						</label>
 						<input type="hidden" class="menu-item-type" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-type]" value="custom">
 						<input type="hidden" class="menu-item-title" name="menu-item[<?php echo $_nav_menu_placeholder; ?>][menu-item-title]" value="<?php _e( 'Separator', 'custom-menu-item-types' ); ?>">
